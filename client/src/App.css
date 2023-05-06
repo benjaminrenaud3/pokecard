@@ -1,0 +1,26 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  min-width: 100vw;
+  display:inline-flex;
+  flex-wrap: wrap;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+/* img {
+
+  max-width: 50px;
+  max-height: 75px;
+  border: solid 1px red;
+} */
+
+.Liste {
+  padding-right: 60px;
+  max-width: 50px;
+  max-height: 75px;
+}

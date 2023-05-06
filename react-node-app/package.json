@@ -1,0 +1,21 @@
+{
+  "name": "react-node-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongodb": "^5.4.0",
+    "node-cache": "^5.1.2",
+    "node-fetch": "^2.6.9",
+    "pokemontcgsdk": "^2.0.0",
+    "ts-node": "^10.9.1",
+    "xlsx": "^0.18.5"
+  }
+}
