@@ -11,7 +11,6 @@ const NodeCache = require("node-cache");
 const cache = new NodeCache();
 
 const path = require('path');
-const express = require('express');
 
 app.use(express.static(path.resolve(__dirname, '../client/build')));
 
