@@ -8,7 +8,7 @@ function getInfoFromExcel() {
 
 function get3() {
     const data = getInfoFromExcel()
-    const sliced = Object.fromEntries(Object.entries(data).slice(0,2))
+    const sliced = Object.fromEntries(Object.entries(data).slice(0,900))
     return sliced
 }
 

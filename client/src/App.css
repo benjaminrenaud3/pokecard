@@ -1,26 +1,96 @@
 .App {
   text-align: center;
+  background-image:url('./assets/Ben_Pokedex_Buttons.svg'),
+  url('./assets/Ben_Pokedex_Background.svg');
+  background-size: cover;
+  height: 1170px;
+}
+
+::-webkit-scrollbar {
+  display: none; /* Rend la scrollbar invisible sur Chrome, Safari, etc. */
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  min-width: 100vw;
-  display:inline-flex;
-  flex-wrap: wrap;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  display: flex;
 }
 
-/* img {
-
-  max-width: 50px;
-  max-height: 75px;
-  border: solid 1px red;
-} */
-
 .Liste {
-  padding-right: 60px;
-  max-width: 50px;
-  max-height: 75px;
+  margin-top: 200px;
+  margin-left: 100px;
+  display:inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  max-width: 1500px;
+  max-height: 920px;
+  overflow: auto;
+  border: solid rgb(29, 29, 29) 10px;
+  border-radius: 2%;
+  background-color: rgba(109, 109, 109, 0.541);
+}
+
+.ListeOfCard {
+  padding-right: 20px;
+  max-width: 200px;
+  max-height: 200px;
+}
+
+@keyframes swing {
+  0% {
+    transform: rotate(0deg);
+    animation-play-state: paused;
+  }
+  25% {
+    transform: rotate(30deg);
+  }
+  75% {
+    transform: rotate(-30deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.pokeball {
+  animation-name: swing;
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  transform-origin: bottom center;
+  width: 180px;
+  height: 150px;
+}
+
+.Selection {
+  border: solid 1px black;
+  border-radius: 10%;
+  margin-top: 350px;
+  margin-left: 100px;
+  width: 500px;
+  display: 'grid';
+  grid-template-columns: '1fr'; 
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.SelectionName {
+  border: solid 10px rgba(0, 0, 0, 0);
+  background-color: rgba(255, 255, 255, 0.5);
+  max-height: 100px;
+  margin-top: 75px;
+  overflow-y: scroll;
+  flex-wrap: wrap;
+}
+
+.SelectionGen {
+  border: solid 10px rgba(0, 0, 0, 0);
+  background-color: rgba(255, 255, 255, 0.5);
+  margin-top: 100px;
+  overflow-y: scroll;
+  flex-wrap: wrap;
+  min-width: 200px;
+}
+
+.SelectionSearch {
+  margin-top: 50px;
 }

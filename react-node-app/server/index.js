@@ -4,29 +4,60 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 
-const callExcel = require("../src/GetAll")
+const callAll = require("../src/GetAll")
+const callNames = require("../src/GetNames")
+const callFiltered = require("../src/GetFiltered")
 const NodeCache = require("node-cache");
 const cache = new NodeCache();
 
-app.get("/api", async (req, res) => {
+const path = require('path');
+const express = require('express');
+
+app.use(express.static(path.resolve(__dirname, '../client/build')));
+
+app.get("/getall", async (req, res) => {
     const key = "data"
     const cachedData = cache.get(key)
 
     if (cachedData) {
-        console.log("is in cache")
         res.json({cachedData});
     }
     else {
-        console.log("is not in cache")
-        const info = await callExcel.getImage()
-        cache.set(key, info, 3600)
-        res.json({info});
+        const cachedData = await callAll.getImage()
+        cache.set(key, cachedData, 259200)
+        res.json({cachedData});
     }
-  //   info = {"0":{"Generation":1,"Num":1,"Nom":"Bulbizarre","Présents":"oui","ID":"pl3-93","image":"https://images.pokemontcg.io/pl3/93.png"},
-  //   "1":{"Generation":1,"Num":2,"Nom":"Bulbizarre","Présents":"oui","ID":"pl3-93","image":"https://images.pokemontcg.io/pl3/93.png"}}
-  });
+});
+
+app.get("/getnames", async (req, res) => {
+  const key = "names"
+  const cachedData = cache.get(key)
+
+  if (cachedData) {
+      res.json({cachedData});
+  }
+  else {
+      const cachedData = await callNames.getNames()
+      cache.set(key, cachedData, 3600)
+      res.json({cachedData});
+  }
+});
+
+app.get("/getone", async (req, res) => {
+  const pokemon = req.query.names;
+  const generation = req.query.generation;
+
+  const key = "data"
+  const cachedData = cache.get(key)
+
+  let filtered = await callFiltered.getFiltered(pokemon, generation, cachedData)
+  res.json({filtered});
+});
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
 
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+});
