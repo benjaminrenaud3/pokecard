@@ -18,8 +18,5 @@
     "pokemontcgsdk": "^2.0.0",
     "ts-node": "^10.9.1",
     "xlsx": "^0.18.5"
-  },
-  "engines": {
-    "node": "14.21.3"
   }
 }
