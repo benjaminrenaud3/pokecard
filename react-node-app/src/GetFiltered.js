@@ -1,4 +1,5 @@
 async function getFiltered(names, generation, data) {
+    //console.log(names, generation, data)
     if (names.length >= 1) {
         let objetsFiltres = Object.values(data).filter(objet => names.includes(objet.Nom));
         return objetsFiltres

@@ -12,19 +12,19 @@ const cache = new NodeCache();
 
 const path = require('path');
 
-app.use(express.static(path.resolve(__dirname, '../client/build')));
+//app.use(express.static(path.resolve(__dirname, '../client/build')));
 
 app.get("/getall", async (req, res) => {
     const key = "data"
     const cachedData = cache.get(key)
 
     if (cachedData) {
-        res.json({cachedData});
+      res.json({cachedData});
     }
     else {
-        const cachedData = await callAll.getImage()
-        cache.set(key, cachedData, 259200)
-        res.json({cachedData});
+      const cachedData = await callAll.getImage()
+      cache.set(key, cachedData, 259200)
+      res.json({cachedData});
     }
 });
 
@@ -33,12 +33,12 @@ app.get("/getnames", async (req, res) => {
   const cachedData = cache.get(key)
 
   if (cachedData) {
-      res.json({cachedData});
+    res.json({cachedData});
   }
   else {
-      const cachedData = await callNames.getNames()
-      cache.set(key, cachedData, 3600)
-      res.json({cachedData});
+    const cachedData = await callNames.getNames()
+    cache.set(key, cachedData, 3600)
+    res.json({cachedData});
   }
 });
 
@@ -57,6 +57,6 @@ app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(path.resolve(__dirname, '../client/build', 'index.js'));
+// });

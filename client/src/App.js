@@ -42,7 +42,6 @@ function App() {
   }
 
   const handleRecherche = async () => {
-    console.log(filtres.Generation, filtres.Names)
     const response = await fetch(`/getone?generation=${filtres.Generation}&names=${filtres.Names}`)
     const data = await response.json()
     setData(data['filtered'])
@@ -55,8 +54,7 @@ function App() {
   //   </div>
   // ))
 
-  // console.log(names)
-
+  //console.log(data)
   return (
     <div className="App">
       <header className="App-header">
@@ -106,7 +104,7 @@ function App() {
           {data && !isLoading ?
           Object.entries(data).map((data, index) => (
             <div key={index} className="ListeOfCard">
-              <img src={data[1]['image'] ? data[1]['image'] : 'https://images.pokemontcg.io/'} width="100" height="150" alt="pokemon"/>
+              <img title={data[1]["Nom"]} src={data[1]['image'] ? data[1]['image'] : 'https://images.pokemontcg.io/'} width="100" height="150" alt="pokemon"/>
             </div>
           )):
           <img src={pokeball} alt="waiting ball" className='pokeball'></img>}
