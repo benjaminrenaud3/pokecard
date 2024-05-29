@@ -8,8 +8,5 @@
     "scripts": {
         "postinstall": "cd client && npm install && npm run build && cd ../react-node-app && npm install",
         "start": "cd react-node-app && node server/index.js"
-    },
-    "dependencies": {
-        "heroku": "^8.11.5"
     }
 }
