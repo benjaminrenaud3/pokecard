@@ -6,7 +6,8 @@
         "node": "14.x"
     },
     "scripts": {
-        "postinstall": "cd client && npm install && npm run build && cd ../react-node-app && npm install",
-        "start": "cd react-node-app && npm start && cd ../client && npm start"
+        "build": "cd client && npm run build",
+        "install": "cd client && npm install && cd ../react-node-app && npm install",
+        "start": "cd react-node-app && node server/index.js && cd ../client && npm start"
     }
 }
