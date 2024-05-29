@@ -1,0 +1,1 @@
+web: cd react-node-app && node server/index.js
