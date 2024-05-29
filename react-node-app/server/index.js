@@ -12,7 +12,7 @@ const cache = new NodeCache();
 
 const path = require('path');
 
-//app.use(express.static(path.resolve(__dirname, '../client/build')));
+app.use(express.static(path.resolve(__dirname, '../client/build')));
 
 app.get("/getall", async (req, res) => {
     const key = "data"
@@ -57,6 +57,6 @@ app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
 
-// app.get('*', (req, res) => {
-//   res.sendFile(path.resolve(__dirname, '../client/build', 'index.js'));
-// });
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../client/build', 'index.js'));
+});
