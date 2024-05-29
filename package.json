@@ -7,6 +7,6 @@
     },
     "scripts": {
         "postinstall": "cd client && npm install && npm run build && cd ../react-node-app && npm install",
-        "start": "cd react-node-app && node server/index.js"
+        "start": "cd react-node-app && npm start && cd ../client && npm start"
     }
 }
