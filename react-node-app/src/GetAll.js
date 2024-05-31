@@ -8,7 +8,7 @@ function getInfoFromExcel() {
 
 function get3() {
     const data = getInfoFromExcel()
-    const sliced = Object.fromEntries(Object.entries(data).slice(0,900))
+    const sliced = Object.fromEntries(Object.entries(data).slice(0,1035))
     return sliced
 }
 
@@ -25,9 +25,16 @@ async function getImage() {
             try {
                 call = await pokemon.card.find(id)
                 data[myKey].image = call.images.small
+                data[myKey].largeimage = call.images.large
+                data[myKey].price = call.cardmarket.prices ? call.cardmarket.prices.averageSellPrice : 0
+                data[myKey].desc = call.flavorText
+                data[myKey].rarity = call.rarity
+                data[myKey].setname = call.set.name
+                data[myKey].setid = call.set.id
+                data[myKey].name = call.name
             }
             catch (error) {
-                console.log(myKey, error)
+                //console.log(myKey, error)
                 data[myKey].image = "https://images.pokemontcg.io/"
             }
         }

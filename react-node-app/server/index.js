@@ -7,6 +7,7 @@ const app = express();
 const callAll = require("../src/GetAll")
 const callNames = require("../src/GetNames")
 const callFiltered = require("../src/GetFiltered")
+
 const NodeCache = require("node-cache");
 const cache = new NodeCache();
 
@@ -51,6 +52,16 @@ app.get("/getone", async (req, res) => {
 
   let filtered = await callFiltered.getFiltered(pokemon, generation, cachedData)
   res.json({filtered});
+});
+
+app.get("/getordered", async (req, res) => {
+  const typeofOrdered = req.query.type
+
+  const key = "data"
+  const cachedData = cache.get(key)
+
+  let Ordered = await callFiltered.getOrdered(typeofOrdered, cachedData)
+  res.json({Ordered});
 });
 
 app.listen(PORT, () => {
