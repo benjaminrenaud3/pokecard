@@ -1,0 +1,168 @@
+.App {
+    text-align: center;
+    background-image: url('./assets/Ben_Pokedex_Buttons.svg'), url('./assets/Ben_Pokedex_Background.svg');
+    background-size: cover;
+    min-height: 100vh;
+  }
+  
+  ::-webkit-scrollbar {
+    display: none; /* Rend la scrollbar invisible sur Chrome, Safari, etc. */
+  }
+  
+  .App-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .Liste {
+    margin: 10rem auto;
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    max-width: 70%;
+    height: 70vh;
+    overflow: auto;
+    border: solid rgb(29, 29, 29) 10px;
+    border-radius: 2%;
+    background-color: rgba(109, 109, 109, 0.541);
+  }
+  
+  .ListeOfCard {
+    padding: 1rem;
+    max-width: 200px;
+    max-height: 200px;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  @keyframes swing {
+    0% {
+      transform: rotate(0deg);
+      animation-play-state: paused;
+    }
+    25% {
+      transform: rotate(30deg);
+    }
+    75% {
+      transform: rotate(-30deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+  
+  .pokeball {
+    animation-name: swing;
+    animation-duration: 2s;
+    animation-timing-function: ease-in-out;
+    animation-delay: 0s;
+    animation-iteration-count: infinite;
+    transform-origin: bottom center;
+    width: 10vw;
+    height: 8vw;
+  }
+  
+  .Selection {
+    border: solid 1px black;
+    border-radius: 10%;
+    margin: 5rem auto;
+    width: 90%;
+    display: grid;
+    grid-template-columns: 1fr; 
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  .SelectionName {
+    border: solid 10px rgba(0, 0, 0, 0);
+    background-color: rgba(255, 255, 255, 0.5);
+    max-height: 100px;
+    margin-top: 2rem;
+    overflow-y: scroll;
+    flex-wrap: wrap;
+  }
+  
+  .SelectionGen {
+    border: solid 10px rgba(0, 0, 0, 0);
+    background-color: rgba(255, 255, 255, 0.5);
+    margin-top: 1rem;
+    overflow-y: scroll;
+    flex-wrap: wrap;
+    min-width: 200px;
+  }
+  
+  .ClassOrder {
+    background-color: rgba(255, 255, 255, 0.5);
+    overflow-y: scroll;
+    flex-wrap: wrap;
+    width: 250px;
+  }
+  
+  .ClassOrderDiv {
+    margin-top: 2rem;
+  }
+  
+  .SelectionSearch {
+    margin-top: 1rem;
+  }
+  
+  .ClearName {
+    margin-top: 0.5rem;
+  }
+  
+  .ListeOfCard.selected {
+    position: fixed;
+    transform: translate(-50%, -50%) scale(2);
+    z-index: 1000;
+    cursor: pointer;
+  }
+  
+  .ListeOfCard.selected .carte-info {
+    position: absolute;
+    top: 65%;
+    left: 110%;
+    transform: translateY(-50%);
+    width: 275px; /* ajustez cette valeur en fonction de vos besoins */
+    text-align: left;
+    font-size: 1rem; /* ajustez cette valeur en fonction de vos besoins */
+  }
+  
+  .carte-info p {
+    margin: 0;
+    padding: 5px 0;
+  }
+  
+  @media (max-width: 768px) {
+    .Liste {
+      max-width: 100%;
+      height: 60vh;
+    }
+  
+    .pokeball {
+      width: 15vw;
+      height: 12vw;
+    }
+  
+    .Selection {
+      width: 95%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .Liste {
+      max-width: 100%;
+      height: 50vh;
+    }
+  
+    .pokeball {
+      width: 20vw;
+      height: 15vw;
+    }
+  
+    .Selection {
+      width: 100%;
+    }
+  }
+  

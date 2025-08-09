@@ -12,6 +12,25 @@ function get3() {
     return sliced
 }
 
+function completeData(data, call, myKey) {
+    const defaultImageUrl = "https://images.pokemontcg.io/";
+
+    data[myKey] = {
+        image: data[myKey].image,
+        largeimage: call?.images?.large ?? defaultImageUrl,
+        pricecardmarket: call?.cardmarket?.prices?.trendPrice ?? 0,
+        pricetcgplayer: call?.tcgplayer?.prices?.normal?.market ?? 0,
+        desc: call?.flavorText ?? "",
+        rarity: call?.rarity ?? "",
+        setname: call?.set?.name ?? "",
+        setid: call?.set?.id ?? "",
+        name: call?.name ?? "",
+        subtype: call?.data.subtype ?? "",
+    };
+
+    return data;
+}
+
 async function getImage() {
     const pokemon = require('pokemontcgsdk')
     pokemon.configure({apiKey: '3c483995-e5ad-401b-9f45-d66606902832'})
@@ -22,20 +41,17 @@ async function getImage() {
         }
         else {
             id = data[myKey]['ID']
+            call = {}
             try {
                 call = await pokemon.card.find(id)
                 data[myKey].image = call.images.small
-                data[myKey].largeimage = call.images.large
-                data[myKey].price = call.cardmarket.prices ? call.cardmarket.prices.averageSellPrice : 0
-                data[myKey].desc = call.flavorText
-                data[myKey].rarity = call.rarity
-                data[myKey].setname = call.set.name
-                data[myKey].setid = call.set.id
-                data[myKey].name = call.name
             }
             catch (error) {
                 //console.log(myKey, error)
                 data[myKey].image = "https://images.pokemontcg.io/"
+            }
+            if (data[myKey].image != "https://images.pokemontcg.io/") {
+                data = completeData(data, call, myKey)
             }
         }
     }

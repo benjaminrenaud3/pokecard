@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Autocomplete from '@mui/material/Autocomplete';
@@ -14,13 +14,16 @@ function App() {
   const [names, setNames] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCarte, setSelectedCarte] = useState(null);
-  const [isOrdered, setOrder] = useState(true);
+  const [isOrdered, setOrder] = useState('');
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   const [filtres, setFilter] = useState({
     Names: [],
     Generation: 1,
     Possede: ""
   });
+
+  const listRef = useRef(null);
 
   useEffect(() => {
     fetchData();
@@ -31,7 +34,7 @@ function App() {
     const response = await fetch("/getall")
     const data = await response.json()
     setData(data['cachedData'])
-    setOrder(0)
+    setOrder('')
   }
 
   async function fetchNames() {
@@ -70,7 +73,15 @@ function App() {
   }
 
   function handleCarteClick(carte) {
+    //console.log(listRef.current.scrollTop)
+    setScrollPosition(listRef.current.scrollTop);
     setSelectedCarte(carte);
+  }
+
+  function handleBackToList() {
+    //console.log(scrollPosition)
+    setSelectedCarte(null);
+    listRef.current.scrollTop = scrollPosition;
   }
 
   // Object.entries(data).map((data, index) => (
@@ -79,7 +90,7 @@ function App() {
   //   </div>
   // ))
 
-  // console.log(data)
+  //console.log(data)
   return (
     <div className="App">
       <header className="App-header">
@@ -147,6 +158,8 @@ function App() {
             <MenuItem value={2}>Reverse alphabetic order</MenuItem>
             <MenuItem value={3}>Price ascending</MenuItem>
             <MenuItem value={4}>Price descending</MenuItem>
+            <MenuItem value={5}>Rarity ascending</MenuItem>
+            <MenuItem value={6}>Rarity descending</MenuItem>
           </Select>
         </FormControl>
         </div>
@@ -156,9 +169,9 @@ function App() {
         </div>
 
         </div>
-        <div className="Liste">
+        <div className="Liste" ref={listRef}>
           {selectedCarte ? (
-            <div className="ListeOfCard selected" onClick={() => setSelectedCarte(null)}>
+            <div className="ListeOfCard selected" onClick={() => handleBackToList()}>
               <img title={selectedCarte.Nom} src={selectedCarte.image ? selectedCarte.image : 'https://images.pokemontcg.io/'} width="100%" alt={selectedCarte.Nom} />
               <div className="carte-info">
                 <p><strong>Name:</strong> {selectedCarte.name}</p>
@@ -166,7 +179,8 @@ function App() {
                 <p><strong>Card ID:</strong> {selectedCarte.setid}</p>
                 <p><strong>Card Set:</strong> {selectedCarte.setname}</p>
                 <p><strong>Rarity:</strong> {selectedCarte.rarity}</p>
-                <p><strong>Average Price on Cardmarket:</strong> {selectedCarte.price}e</p>
+                <p><strong>Price Trend on Cardmarket:</strong> {selectedCarte.pricecardmarket}e</p>
+                <p><strong>Market Price on TCGplayer:</strong> {selectedCarte.pricetcgplayer}e</p>
               </div>
             </div>
           ) : (
