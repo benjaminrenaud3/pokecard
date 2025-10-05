@@ -1,3 +1,23 @@
+function findCardInJSON(cardId) {
+    const fs = require('fs');
+    const path = require('path');
+
+    try {
+        const setCode = cardId.split('-')[0];
+        const jsonPath = path.join(__dirname, '..', 'cards', `${setCode}.json`);
+
+        if (!fs.existsSync(jsonPath)) {
+            return null;
+        }
+        const jsonData = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+        const card = jsonData.find(c => c.id === cardId);
+
+        return card || null;
+    } catch (error) {
+        return null;
+    }
+}
+
 function getInfoFromExcel() {
     const XLSX = require('xlsx')
     const workbook = XLSX.readFile('./src/Pokedex.xlsx');
@@ -32,8 +52,6 @@ function completeData(data, call, myKey) {
 }
 
 async function getImage() {
-    const pokemon = require('pokemontcgsdk')
-    pokemon.configure({apiKey: '3c483995-e5ad-401b-9f45-d66606902832'})
     var data = get3()
     for(var myKey in data) {
         if (data[myKey]['ID no image'] == "no image" || data[myKey]['Present'] != "oui") {
@@ -43,8 +61,12 @@ async function getImage() {
             id = data[myKey]['ID']
             call = {}
             try {
-                call = await pokemon.card.find(id)
-                data[myKey].image = call.images.small
+                call = findCardInJSON(id)
+                if (call && call.images && call.images.small) {
+                    data[myKey].image = call.images.small
+                } else {
+                    data[myKey].image = "https://images.pokemontcg.io/"
+                }
             }
             catch (error) {
                 //console.log(myKey, error)
