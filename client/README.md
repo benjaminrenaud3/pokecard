@@ -1,70 +1,182 @@
-# Getting Started with Create React App
+# Frontend - Interface de gestion de collection Pokémon
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Application React qui affiche et gère votre collection de cartes Pokémon avec des fonctionnalités de recherche, filtrage et tri.
 
-## Available Scripts
+## Structure du projet
 
-In the project directory, you can run:
+```
+client/
+├── public/               # Fichiers statiques
+├── src/
+│   ├── App.js           # Composant principal
+│   ├── App.css          # Styles de l'application
+│   ├── index.js         # Point d'entrée React
+│   └── assets/          # Images et ressources
+└── package.json
+```
 
-### `npm start`
+## Fonctionnalités
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 1. Affichage des cartes
+- Vue en grille de toutes les cartes de votre collection
+- Images récupérées depuis les fichiers JSON locaux via le backend
+- Affichage d'une pokéball animée pendant le chargement
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 2. Vue détaillée
+Cliquez sur une carte pour voir :
+- Image en grand format
+- Nom du Pokémon
+- Description (flavor text)
+- ID de la carte
+- Nom du set
+- Rareté
+- Prix sur Cardmarket (tendance)
+- Prix sur TCGplayer (market)
 
-### `npm test`
+Cliquez à nouveau pour revenir à la liste (la position de scroll est conservée).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 3. Recherche et filtres
 
-### `npm run build`
+#### Autocomplete multi-sélection
+- Champ de recherche avec autocomplétion
+- Sélection multiple de Pokémon par nom
+- Bouton "Clear names" pour réinitialiser la sélection
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### Filtre par génération
+Sélecteur permettant de filtrer par génération (1 à 9).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### Bouton "Search"
+Applique les filtres sélectionnés (noms et/ou génération).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 4. Tri des cartes
 
-### `npm run eject`
+Menu déroulant "Order By" proposant 6 options :
+1. **Ordre alphabétique** (A → Z)
+2. **Ordre alphabétique inverse** (Z → A)
+3. **Prix croissant** (moins cher → plus cher)
+4. **Prix décroissant** (plus cher → moins cher)
+5. **Rareté croissante**
+6. **Rareté décroissante**
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Le tri exclut automatiquement les cartes sans image.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 5. Bouton "Display All"
+Réinitialise tous les filtres et affiche l'intégralité de la collection.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Architecture technique
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### État de l'application (useState)
 
-## Learn More
+```javascript
+const [data, setData] = useState(null);           // Données des cartes
+const [names, setNames] = useState(null);         // Liste des noms pour autocomplete
+const [isLoading, setIsLoading] = useState(true); // État de chargement
+const [selectedCarte, setSelectedCarte] = useState(null); // Carte sélectionnée
+const [isOrdered, setOrder] = useState('');       // Type de tri actif
+const [scrollPosition, setScrollPosition] = useState(0); // Position du scroll
+const [filtres, setFilter] = useState({          // Filtres actifs
+  Names: [],
+  Generation: 1,
+  Possede: ""
+});
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Appels API
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+#### Chargement initial
+```javascript
+useEffect(() => {
+  fetchData();    // Récupère toutes les cartes
+  fetchNames();   // Récupère la liste des noms
+}, []);
+```
 
-### Code Splitting
+#### Endpoints utilisés
+- `GET /getall` : Toutes les cartes
+- `GET /getnames` : Noms pour autocomplete
+- `GET /getone?generation=X&names=Y` : Cartes filtrées
+- `GET /getordered?type=X` : Cartes triées
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Gestion du scroll
+Le système conserve la position de scroll lors de l'ouverture d'une carte :
+1. Au clic sur une carte, la position est sauvegardée
+2. En mode détail, l'utilisateur voit la carte en grand
+3. Au retour à la liste, le scroll revient à la position exacte
 
-### Analyzing the Bundle Size
+```javascript
+function handleCarteClick(carte) {
+  setScrollPosition(listRef.current.scrollTop);  // Sauvegarde
+  setSelectedCarte(carte);
+}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+function handleBackToList() {
+  setSelectedCarte(null);
+  listRef.current.scrollTop = scrollPosition;    // Restauration
+}
+```
 
-### Making a Progressive Web App
+### Composants Material-UI utilisés
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- **Autocomplete** : Recherche multi-sélection de Pokémon
+- **TextField** : Champs de saisie
+- **Select/MenuItem** : Sélecteurs de génération et tri
+- **Button** : Boutons d'action
+- **FormControl/InputLabel** : Conteneurs de formulaires
 
-### Advanced Configuration
+### Proxy API
+Le fichier `package.json` configure un proxy vers le backend :
+```json
+"proxy": "http://localhost:3001/"
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Cela permet d'appeler `/getall` au lieu de `http://localhost:3001/getall`.
 
-### Deployment
+## Gestion des images
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Chargement
+```javascript
+<img
+  src={carte.image ? carte.image : 'https://images.pokemontcg.io/'}
+  alt="pokemon"
+/>
+```
 
-### `npm run build` fails to minify
+### Fallback
+Si aucune image n'est disponible, l'URL par défaut de PokemonTCG est utilisée (affiche un placeholder).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Styles
+
+L'application utilise CSS custom (App.css) combiné avec les composants Material-UI pour :
+- Layout responsive
+- Grille de cartes
+- Animations de chargement
+- Vue détaillée en overlay
+
+## Installation
+
+```bash
+npm install
+```
+
+## Démarrage en développement
+
+```bash
+npm start
+```
+
+L'application démarre sur `http://localhost:3000` et se connecte automatiquement au backend sur le port 3001.
+
+## Build de production
+
+```bash
+npm run build
+```
+
+Génère un dossier `build/` optimisé pour la production, servi par le backend Express.
+
+## Dépendances principales
+
+- **react** & **react-dom** : Framework React
+- **@mui/material** : Composants Material-UI
+- **@emotion/react** & **@emotion/styled** : Styling pour Material-UI
+- **perfect-scrollbar** : Amélioration du scroll
