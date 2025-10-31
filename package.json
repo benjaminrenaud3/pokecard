@@ -6,8 +6,8 @@
         "node": "14.x"
     },
     "scripts": {
-        "build": "cd client && npm run build",
-        "install": "cd client && npm install && cd ../react-node-app && npm install",
-        "start": "cd react-node-app && node server/index.js && cd ../client && npm start"
+        "build": "cd frontend && npm run build",
+        "install": "cd frontend && npm install && cd ../backend && npm install",
+        "start": "cd backend && node server/index.js && cd ../frontend && npm start"
     }
 }

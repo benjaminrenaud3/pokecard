@@ -5,18 +5,18 @@ Application web de gestion de collection de cartes Pokémon avec interface React
 ## Vue d'ensemble
 
 Ce projet est composé de deux parties :
-- **Backend** (`react-node-app/`) : Serveur Express qui récupère les données depuis des fichiers JSON locaux
-- **Frontend** (`client/`) : Application React avec interface Material-UI
+- **Backend** (`backend/`) : Serveur Express qui récupère les données depuis des fichiers JSON locaux
+- **Frontend** (`frontend/`) : Application React avec interface Material-UI
 
 ### Contexte du projet
 
-Initialement, le projet utilisait l'API PokemonTCG pour récupérer les images et informations des cartes. Suite au passage de l'API en version payante, le système a été migré pour utiliser des fichiers JSON locaux stockés dans le dossier `react-node-app/cards/`.
+Initialement, le projet utilisait l'API PokemonTCG pour récupérer les images et informations des cartes. Suite au passage de l'API en version payante, le système a été migré pour utiliser des fichiers JSON locaux stockés dans le dossier `backend/cards/`.
 
 ## Structure du projet
 
 ```
 pokecard/
-├── client/                       # Application React (Frontend)
+├── frontend/                       # Application React (Frontend)
 │   ├── src/
 │   │   ├── App.js               # Composant principal
 │   │   ├── App.css              # Styles
@@ -24,7 +24,7 @@ pokecard/
 │   ├── public/
 │   └── package.json
 │
-├── react-node-app/              # Serveur Node.js (Backend)
+├── backend/              # Serveur Node.js (Backend)
 │   ├── server/
 │   │   └── index.js            # Serveur Express
 │   ├── src/
@@ -122,10 +122,10 @@ Cette commande démarre le backend ET le frontend en parallèle.
 
 ## Utilisation
 
-1. **Assurez-vous que le fichier `Pokedex.xlsx` est à jour** dans `react-node-app/src/`
+1. **Assurez-vous que le fichier `Pokedex.xlsx` est à jour** dans `backend/src/`
    - Colonnes requises : `ID`, `Nom`, `Generation`, `Present`, `ID no image`
 
-2. **Vérifiez que les fichiers JSON sont présents** dans `react-node-app/cards/`
+2. **Vérifiez que les fichiers JSON sont présents** dans `backend/cards/`
    - Format : `{set-code}.json` (ex: `sv1.json`, `swsh12.json`)
 
 3. **Ouvrez votre navigateur** sur `http://localhost:3000`
@@ -145,7 +145,7 @@ cd client
 npm run build
 ```
 
-Le dossier `client/build/` contiendra l'application compilée, qui sera automatiquement servie par le backend Express.
+Le dossier `frontend/build/` contiendra l'application compilée, qui sera automatiquement servie par le backend Express.
 
 Pour démarrer en production :
 ```bash
@@ -164,7 +164,7 @@ Les cartes sont stockées dans des fichiers JSON organisés par set. Chaque cart
 - `BB` = numéro de la carte dans le set
 
 **Exemple :** L'ID `sv1-25` correspond à :
-1. Fichier : `react-node-app/cards/sv1.json`
+1. Fichier : `backend/cards/sv1.json`
 2. Carte avec `"id": "sv1-25"` dans ce fichier
 3. L'image est récupérée depuis le champ `images.small`
 
@@ -182,27 +182,27 @@ Les cartes sont stockées dans des fichiers JSON organisés par set. Chaque cart
 
 ### Le backend ne démarre pas
 - Vérifiez que Node.js 14+ est installé : `node --version`
-- Vérifiez que les dépendances sont installées : `npm install` dans `react-node-app/`
+- Vérifiez que les dépendances sont installées : `npm install` dans `backend/`
 - Vérifiez que le port 3001 n'est pas déjà utilisé
 
 ### Le frontend ne trouve pas le backend
 - Vérifiez que le backend est bien démarré sur le port 3001
-- Vérifiez la configuration du proxy dans `client/package.json` : `"proxy": "http://localhost:3001/"`
+- Vérifiez la configuration du proxy dans `frontend/package.json` : `"proxy": "http://localhost:3001/"`
 
 ### Les images ne s'affichent pas
-- Vérifiez que les fichiers JSON sont présents dans `react-node-app/cards/`
+- Vérifiez que les fichiers JSON sont présents dans `backend/cards/`
 - Vérifiez que les IDs dans votre Excel correspondent aux IDs des cartes dans les JSON
 - Vérifiez les logs du serveur pour voir les erreurs éventuelles
 
 ### Le fichier Excel n'est pas lu
-- Assurez-vous que `Pokedex.xlsx` est bien dans `react-node-app/src/`
+- Assurez-vous que `Pokedex.xlsx` est bien dans `backend/src/`
 - Vérifiez que le fichier contient les colonnes : `ID`, `Nom`, `Generation`, `Present`, `ID no image`
 
 ## Documentation détaillée
 
 Pour plus d'informations sur chaque partie du projet :
-- [README Backend](react-node-app/README.md) - Documentation technique du serveur
-- [README Frontend](client/README.md) - Documentation de l'interface React
+- [README Backend](backend/README.md) - Documentation technique du serveur
+- [README Frontend](frontend/README.md) - Documentation de l'interface React
 
 ## Technologies utilisées
 

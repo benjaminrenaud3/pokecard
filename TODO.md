@@ -10,7 +10,7 @@ Ce document liste toutes les améliorations à apporter au projet, organisées p
   - `get3()` → `getCollectionData()` ou `getExcelData()`
   - `call` → `cardData` ou `jsonCard`
   - `myKey` → `cardIndex` ou `rowIndex`
-  - Fichier: `react-node-app/src/GetAll.js`
+  - Fichier: `backend/src/GetAll.js`
 
 - [ ] **#8** - Corriger les variables globales
   - Lignes 61-62 dans `GetAll.js` : ajouter `const` ou `let` devant `id` et `call`
@@ -44,13 +44,13 @@ Ce document liste toutes les améliorations à apporter au projet, organisées p
 ### Architecture et refactoring
 
 - [ ] **#1** - Réorganiser le backend
-  - Créer `react-node-app/controllers/` pour la logique métier
-  - Créer `react-node-app/services/` pour les services (lecture JSON, Excel)
-  - Créer `react-node-app/routes/` pour séparer les routes
+  - Créer `backend/controllers/` pour la logique métier
+  - Créer `backend/services/` pour les services (lecture JSON, Excel)
+  - Créer `backend/routes/` pour séparer les routes
   - Déplacer la logique hors de `server/index.js`
 
 - [ ] **#2** - Centraliser la configuration
-  - Créer `react-node-app/config.js` avec toutes les constantes
+  - Créer `backend/config.js` avec toutes les constantes
   - Externaliser: chemins, durées de cache, port, URLs par défaut
 
 - [ ] **#3** - Ajouter un système de logging
@@ -64,10 +64,10 @@ Ce document liste toutes les améliorations à apporter au projet, organisées p
   - Gérer les différences dev/prod (chemins, ports)
 
 - [ ] **#5** - Découper le composant App.js en composants
-  - Créer `client/src/components/CardGrid.jsx`
-  - Créer `client/src/components/CardDetail.jsx`
-  - Créer `client/src/components/FilterPanel.jsx`
-  - Créer `client/src/components/SearchBar.jsx`
+  - Créer `frontend/src/components/CardGrid.jsx`
+  - Créer `frontend/src/components/CardDetail.jsx`
+  - Créer `frontend/src/components/FilterPanel.jsx`
+  - Créer `frontend/src/components/SearchBar.jsx`
   - App.js fait 200 lignes, trop complexe
 
 - [ ] **#6** - Améliorer la gestion d'état
