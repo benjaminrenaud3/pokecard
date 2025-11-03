@@ -8,59 +8,58 @@ const callAll = require("../src/GetAll")
 const callNames = require("../src/GetNames")
 const callFiltered = require("../src/GetFiltered")
 
-const NodeCache = require("node-cache");
-const cache = new NodeCache();
-
 const path = require('path');
 
 app.use(express.static(path.resolve(__dirname, '../../frontend/build')));
 
-app.get("/getall", async (req, res) => {
-    const key = "data"
-    const cachedData = cache.get(key)
+// Variable globale pour stocker les données en mémoire (sans cache avec TTL)
+let globalData = null;
 
-    if (cachedData) {
-      res.json({cachedData});
+app.get("/getall", async (req, res) => {
+    if (!globalData) {
+        globalData = await callAll.getImage();
     }
-    else {
-      const cachedData = await callAll.getImage()
-      cache.set(key, cachedData, 259200)
-      res.json({cachedData});
-    }
+    res.json({cachedData: globalData});
 });
 
-app.get("/getnames", async (req, res) => {
-  const key = "names"
-  const cachedData = cache.get(key)
+let globalNames = null;
 
-  if (cachedData) {
-    res.json({cachedData});
+app.get("/getnames", async (req, res) => {
+  if (!globalNames) {
+    globalNames = await callNames.getNames();
   }
-  else {
-    const cachedData = await callNames.getNames()
-    cache.set(key, cachedData, 3600)
-    res.json({cachedData});
-  }
+  res.json({cachedData: globalNames});
 });
 
 app.get("/getone", async (req, res) => {
-  const pokemon = req.query.names;
+  // Convertir names en array si c'est une string
+  let pokemon = req.query.names;
+  if (typeof pokemon === 'string' && pokemon.length > 0) {
+    pokemon = pokemon.split(',');
+  } else if (!pokemon || pokemon.length === 0) {
+    pokemon = [];
+  }
+
   const generation = req.query.generation;
 
-  const key = "data"
-  const cachedData = cache.get(key)
+  // Utiliser les données globales
+  if (!globalData) {
+    globalData = await callAll.getImage();
+  }
 
-  let filtered = await callFiltered.getFiltered(pokemon, generation, cachedData)
+  let filtered = await callFiltered.getFiltered(pokemon, generation, globalData)
   res.json({filtered});
 });
 
 app.get("/getordered", async (req, res) => {
   const typeofOrdered = req.query.type
 
-  const key = "data"
-  const cachedData = cache.get(key)
+  // Utiliser les données globales
+  if (!globalData) {
+    globalData = await callAll.getImage();
+  }
 
-  let Ordered = await callFiltered.getOrdered(typeofOrdered, cachedData)
+  let Ordered = await callFiltered.getOrdered(typeofOrdered, globalData)
   res.json({Ordered});
 });
 

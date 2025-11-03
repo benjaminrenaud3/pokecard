@@ -30,6 +30,18 @@ function App() {
     fetchNames();
   }, []);
 
+  // Restaurer la position de scroll après la fermeture de la modal
+  useEffect(() => {
+    if (!selectedCarte && scrollPosition > 0 && listRef.current) {
+      // Utiliser setTimeout pour s'assurer que le DOM est mis à jour
+      setTimeout(() => {
+        if (listRef.current) {
+          listRef.current.scrollTop = scrollPosition;
+        }
+      }, 0);
+    }
+  }, [selectedCarte, scrollPosition]);
+
   async function fetchData() {
     const response = await fetch("/getall")
     const data = await response.json()
@@ -79,9 +91,8 @@ function App() {
   }
 
   function handleBackToList() {
-    //console.log(scrollPosition)
+    // La restauration du scroll sera gérée par useEffect
     setSelectedCarte(null);
-    listRef.current.scrollTop = scrollPosition;
   }
 
   // Object.entries(data).map((data, index) => (
@@ -156,10 +167,8 @@ function App() {
             >
             <MenuItem value={1}>Alphabetic order</MenuItem>
             <MenuItem value={2}>Reverse alphabetic order</MenuItem>
-            <MenuItem value={3}>Price ascending</MenuItem>
-            <MenuItem value={4}>Price descending</MenuItem>
-            <MenuItem value={5}>Rarity ascending</MenuItem>
-            <MenuItem value={6}>Rarity descending</MenuItem>
+            <MenuItem value={3}>Rarity ascending</MenuItem>
+            <MenuItem value={4}>Rarity descending</MenuItem>
           </Select>
         </FormControl>
         </div>
@@ -172,15 +181,13 @@ function App() {
         <div className="Liste" ref={listRef}>
           {selectedCarte ? (
             <div className="ListeOfCard selected" onClick={() => handleBackToList()}>
-              <img title={selectedCarte.Nom} src={selectedCarte.image ? selectedCarte.image : 'https://images.pokemontcg.io/'} width="100%" alt={selectedCarte.Nom} />
+              <img title={selectedCarte.Nom} src={selectedCarte.largeimage ? selectedCarte.largeimage : (selectedCarte.image ? selectedCarte.image : 'https://images.pokemontcg.io/')} width="100%" alt={selectedCarte.Nom} />
               <div className="carte-info">
                 <p><strong>Name:</strong> {selectedCarte.name}</p>
                 <p><strong>Description:</strong> {selectedCarte.desc}</p>
-                <p><strong>Card ID:</strong> {selectedCarte.setid}</p>
                 <p><strong>Card Set:</strong> {selectedCarte.setname}</p>
+                <p><strong>Card ID:</strong> {selectedCarte.setid}</p>
                 <p><strong>Rarity:</strong> {selectedCarte.rarity}</p>
-                <p><strong>Price Trend on Cardmarket:</strong> {selectedCarte.pricecardmarket}e</p>
-                <p><strong>Market Price on TCGplayer:</strong> {selectedCarte.pricetcgplayer}e</p>
               </div>
             </div>
           ) : (
