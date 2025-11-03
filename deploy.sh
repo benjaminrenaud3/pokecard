@@ -24,71 +24,51 @@ echo -e "${BLUE}========================================${NC}"
 echo -e "${BLUE}   Déploiement de Pokecard${NC}"
 echo -e "${BLUE}========================================${NC}\n"
 
-# 1. Vérifier si le répertoire existe
-if [ ! -d "$PROJECT_DIR" ]; then
-    echo -e "${YELLOW}⚠️  Le répertoire $PROJECT_DIR n'existe pas.${NC}"
-    echo -e "${BLUE}📁 Création du répertoire...${NC}"
-    sudo mkdir -p $PROJECT_DIR
-    echo -e "${GREEN}✅ Répertoire créé${NC}\n"
-fi
-
-# 2. Copier les fichiers du projet
-echo -e "${BLUE}📦 Copie des fichiers du projet...${NC}"
-sudo cp -r backend $PROJECT_DIR/
-sudo cp -r frontend $PROJECT_DIR/
-sudo cp package.json $PROJECT_DIR/ 2>/dev/null || true
-echo -e "${GREEN}✅ Fichiers copiés${NC}\n"
-
-# 3. Installer les dépendances backend
+# 1. Installer les dépendances backend
 echo -e "${BLUE}📚 Installation des dépendances backend...${NC}"
-cd $PROJECT_DIR/backend
-sudo npm install --production
+cd backend
+npm install --production
 echo -e "${GREEN}✅ Dépendances backend installées${NC}\n"
 
-# 4. Build du frontend
+# 2. Build du frontend
 echo -e "${BLUE}🔨 Build du frontend...${NC}"
-cd $PROJECT_DIR/frontend
-sudo npm install
-sudo npm run build
+cd ../frontend
+npm install
+npm run build
 echo -e "${GREEN}✅ Frontend buildé${NC}\n"
 
-# 5. Modifier le port dans le fichier serveur
+# 3. Modifier le port dans le fichier serveur
 echo -e "${BLUE}⚙️  Configuration du port $PORT...${NC}"
-sudo sed -i "s/const PORT = process.env.PORT || [0-9]*/const PORT = process.env.PORT || $PORT/" $PROJECT_DIR/backend/server/index.js
+sed -i "s/const PORT = process.env.PORT || [0-9]*/const PORT = process.env.PORT || $PORT/" ../backend/server/index.js
 echo -e "${GREEN}✅ Port configuré${NC}\n"
 
-# 6. Vérifier si l'application existe déjà dans PM2
+# 4. Vérifier si l'application existe déjà dans PM2
 if pm2 list | grep -q "$APP_NAME"; then
     echo -e "${YELLOW}🔄 Application existante détectée. Mise à jour...${NC}"
     pm2 delete $APP_NAME
     echo -e "${GREEN}✅ Ancienne instance supprimée${NC}\n"
 fi
 
-# 7. Démarrer l'application avec PM2
+# 5. Démarrer l'application avec PM2
 echo -e "${BLUE}🚀 Démarrage de l'application avec PM2...${NC}"
-cd $PROJECT_DIR/backend
+cd ../backend
 pm2 start server/index.js --name "$APP_NAME" --time
 echo -e "${GREEN}✅ Application démarrée${NC}\n"
 
-# 8. Sauvegarder la configuration PM2
+# 6. Sauvegarder la configuration PM2
 echo -e "${BLUE}💾 Sauvegarde de la configuration PM2...${NC}"
 pm2 save
 echo -e "${GREEN}✅ Configuration sauvegardée${NC}\n"
 
-# 9. Configurer PM2 pour démarrer au boot (si pas déjà fait)
-echo -e "${BLUE}🔧 Configuration du démarrage automatique...${NC}"
-pm2 startup systemd -u $USER --hp $HOME > /dev/null 2>&1 || true
-echo -e "${GREEN}✅ Démarrage automatique configuré${NC}\n"
-
-# 10. Afficher le statut
+# 7. Afficher le statut
 echo -e "${BLUE}📊 Statut de l'application:${NC}"
 pm2 list | grep "$APP_NAME"
 echo ""
 
-# 11. Récupérer l'IP du serveur
+# 8. Récupérer l'IP du serveur
 SERVER_IP=$(hostname -I | awk '{print $1}')
 
-# 12. Message final
+# 9. Message final
 echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}   ✅ Déploiement terminé avec succès!${NC}"
 echo -e "${GREEN}========================================${NC}\n"
